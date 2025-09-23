@@ -1,0 +1,97 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String         @id @default(cuid())
+  name          String
+  email         String         @unique
+  avatar        String?        // URL to avatar image
+  role          Role           @default(USER)
+  contributions Int            @default(0) // Number of datasets submitted or points
+  createdAt     DateTime       @default(now())
+
+  datasets      Dataset[]      // datasets contributed by this user
+  comments      Comment[]
+  likes         Like[]
+  notifications Notification[] // NEW: notifications for this user
+}
+
+enum Role {
+  USER
+  MODERATOR
+  ADMIN
+}
+
+model Dataset {
+  id          String       @id @default(cuid())
+  title       String
+  description String?
+  url         String       @unique
+  category    String?
+  size        Int?         // in MB or bytes
+  createdBy   String       // FK to User.id
+  createdAt   DateTime     @default(now())
+  isVerified  Boolean      @default(false)
+  likes       Like[]
+  comments    Comment[]
+  tags        DatasetTag[]
+
+  contributor User         @relation(fields: [createdBy], references: [id])
+}
+
+model Comment {
+  id          String    @id @default(cuid())
+  userId      String
+  datasetId   String
+  text        String
+  createdAt   DateTime  @default(now())
+
+  user        User      @relation(fields: [userId], references: [id])
+  dataset     Dataset   @relation(fields: [datasetId], references: [id])
+}
+
+model Like {
+  id          String   @id @default(cuid())
+  userId      String
+  datasetId   String
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id])
+  dataset     Dataset  @relation(fields: [datasetId], references: [id])
+
+  @@unique([userId, datasetId]) // One like per user per dataset
+}
+
+model Tag {
+  id      String        @id @default(cuid())
+  name    String        @unique
+  datasets DatasetTag[]
+}
+
+model DatasetTag {
+  datasetId String
+  tagId     String
+
+  dataset   Dataset  @relation(fields: [datasetId], references: [id])
+  tag       Tag      @relation(fields: [tagId], references: [id])
+
+  @@id([datasetId, tagId])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String              // 'like', 'comment', etc.
+  refId     String?             // Optional: ID of related object (like comment or dataset)
+  content   String              // Notification message
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id])
+}
