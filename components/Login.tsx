@@ -51,8 +51,14 @@ const LoginModal: React.FC<LoginModalProps> = ({
 
       onLoginSuccess();
       onClose();
-    } catch (err: any) {
-      setError(err.message || "Failed to login");
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        setError(e.message);
+        throw e;
+      } else {
+        setError("An unknown error occurred");
+        throw new Error("An unknown error occurred");
+      }
     } finally {
       setLoading(false);
     }
@@ -76,8 +82,14 @@ const LoginModal: React.FC<LoginModalProps> = ({
 
       onLoginSuccess();
       onClose();
-    } catch (err: any) {
-      setError(err.message || "Google login failed");
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        setError(e.message);
+        throw e;
+      } else {
+        setError("An unknown error occurred");
+        throw new Error("An unknown error occurred");
+      }
     } finally {
       setLoading(false);
     }
@@ -101,8 +113,14 @@ const LoginModal: React.FC<LoginModalProps> = ({
 
       onLoginSuccess();
       onClose();
-    } catch (err: any) {
-      setError(err.message || "Apple login failed");
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        setError(e.message);
+        throw e;
+      } else {
+        setError("An unknown error occurred");
+        throw new Error("An unknown error occurred");
+      }
     } finally {
       setLoading(false);
     }

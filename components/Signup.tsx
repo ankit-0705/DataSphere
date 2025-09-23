@@ -83,9 +83,14 @@ const SignupModal: React.FC<SignupModalProps> = ({
 
       onSignupSuccess();
       onClose();
-    } catch (err: any) {
-      console.error("Signup error:", err);
-      setError(err.message || "Failed to create account.");
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        setError(e.message);
+        throw e;
+      } else {
+        setError("An unknown error occurred");
+        throw new Error("An unknown error occurred");
+      }
     } finally {
       setLoading(false);
     }
@@ -186,9 +191,17 @@ const SignupModal: React.FC<SignupModalProps> = ({
                 type="button"
                 onClick={() => setShowConfirmPassword((prev) => !prev)}
                 className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white/60 hover:text-white cursor-pointer"
-                aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
+                aria-label={
+                  showConfirmPassword
+                    ? "Hide confirm password"
+                    : "Show confirm password"
+                }
               >
-                {showConfirmPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+                {showConfirmPassword ? (
+                  <FiEyeOff size={20} />
+                ) : (
+                  <FiEye size={20} />
+                )}
               </button>
             </div>
 

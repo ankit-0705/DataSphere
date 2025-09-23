@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { auth } from '@/lib/firebase/client';
+import { useState } from "react";
+import { auth } from "@/lib/firebase/client";
 
 type DatasetCreateBody = {
   title: string;
@@ -20,14 +20,14 @@ export const useCreateDataset = () => {
 
     try {
       const user = auth.currentUser;
-      if (!user) throw new Error('User not authenticated');
+      if (!user) throw new Error("User not authenticated");
 
       const token = await user.getIdToken();
 
-      const res = await fetch('/api/datasets', {
-        method: 'POST',
+      const res = await fetch("/api/datasets", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(data),
@@ -35,15 +35,19 @@ export const useCreateDataset = () => {
 
       if (!res.ok) {
         const errorData = await res.json();
-        throw new Error(errorData.error || 'Failed to create dataset');
+        throw new Error(errorData.error || "Failed to create dataset");
       }
 
       const result = await res.json();
       return result.data; // your newly created dataset
-
-    } catch (e: any) {
-      setError(e.message);
-      throw e;
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        setError(e.message);
+        throw e;
+      } else {
+        setError("An unknown error occurred");
+        throw new Error("An unknown error occurred");
+      }
     } finally {
       setLoading(false);
     }

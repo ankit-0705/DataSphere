@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useState } from "react";
 import Image from "next/image";
@@ -23,8 +23,18 @@ import { useDatasets } from "@/hooks/useDatasets";
 import { useDatasetStats } from "@/hooks/useDatasetStats";
 
 const MONTHS = [
-  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
 ];
 
 // Skeleton component mimics Dashboard layout
@@ -70,7 +80,7 @@ const DashboardPage = () => {
   } = useNotifications();
   const { stats, isLoading: statsLoading } = useDatasetStats();
   const {
-    datasets,
+    datasets = [],
     isLoading: datasetsLoading,
     isError: datasetsError,
   } = useDatasets({ limit: 7 });
@@ -91,21 +101,22 @@ const DashboardPage = () => {
   });
 
   const links = [
-    { title: 'Dashboard', icon: <IconLayoutDashboard />, href: '/dashboard' },
-    { title: 'Datasets', icon: <IconDatabase />, href: '/datasets' },
-    { title: 'Profile', icon: <IconUserCircle />, href: '/profile' },
-    { title: 'Leaderboard', icon: <IconTrophy />, href: '/leaderboard' },
-    { title: 'About Us', icon: <IconInfoCircle />, href: '/about' },
-    { title: 'Contact', icon: <IconMail />, href: '/contact' },
+    { title: "Dashboard", icon: <IconLayoutDashboard />, href: "/dashboard" },
+    { title: "Datasets", icon: <IconDatabase />, href: "/datasets" },
+    { title: "Profile", icon: <IconUserCircle />, href: "/profile" },
+    { title: "Leaderboard", icon: <IconTrophy />, href: "/leaderboard" },
+    { title: "About Us", icon: <IconInfoCircle />, href: "/about" },
+    { title: "Contact", icon: <IconMail />, href: "/contact" },
   ];
 
   // Show skeleton while loading user info
   if (loading) return <DashboardSkeleton />;
-  if (!user) return (
-    <div className="relative min-h-screen bg-black text-white flex items-center justify-center">
-      <div className="text-white text-lg font-semibold">User not found.</div>
-    </div>
-  );
+  if (!user)
+    return (
+      <div className="relative min-h-screen bg-black text-white flex items-center justify-center">
+        <div className="text-white text-lg font-semibold">User not found.</div>
+      </div>
+    );
 
   return (
     <div className="relative min-h-screen bg-black text-white overflow-x-hidden">
@@ -154,7 +165,9 @@ const DashboardPage = () => {
           {statsLoading ? (
             <div className="w-full h-64 bg-gray-800 rounded-lg animate-pulse" />
           ) : (
-            stats && <DatasetActivityComparisonLineChart data={mergedChartData} />
+            stats && (
+              <DatasetActivityComparisonLineChart data={mergedChartData} />
+            )
           )}
 
           <div>

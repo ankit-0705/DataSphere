@@ -17,15 +17,17 @@ export function useLogout() {
         },
       });
       if (!res.ok) throw new Error("Logout failed");
-      
-      // Clear user context here if applicable, e.g., via a refresh or context method
-      // Assuming you have a refreshUser or similar from your UserContext:
-      // await refreshUser();
 
       // Redirect after logout (to login or home)
       router.push("/landing");
-    } catch (err: any) {
-      setError(err.message || "An error occurred");
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        setError(e.message);
+        throw e;
+      } else {
+        setError("An unknown error occurred");
+        throw new Error("An unknown error occurred");
+      }
     } finally {
       setLoading(false);
     }

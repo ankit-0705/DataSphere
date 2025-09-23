@@ -25,9 +25,14 @@ export const useDeleteAccount = () => {
       // Optional: sign out user on success
       await auth.signOut();
       return true;
-    } catch (e: any) {
-      setError(e.message);
-      throw e;
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        setError(e.message);
+        throw e;
+      } else {
+        setError("An unknown error occurred");
+        throw new Error("An unknown error occurred");
+      }
     } finally {
       setLoading(false);
     }

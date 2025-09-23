@@ -1,12 +1,12 @@
-import { useState, useEffect, useCallback } from 'react';
-import { auth } from '@/lib/firebase/client';
-import { useUser } from '@/context/UserContext';
+import { useState, useEffect, useCallback } from "react";
+import { auth } from "@/lib/firebase/client";
+import { useUser } from "@/context/UserContext";
 
 export type User = {
   id: string;
   name: string;
   email: string;
-  role: 'USER' | 'MODERATOR' | 'ADMIN';
+  role: "USER" | "MODERATOR" | "ADMIN";
   contributions: number;
   createdAt: string;
 };
@@ -32,18 +32,34 @@ export const useFetchUsers = (page: number = 1, limit: number = 10) => {
   const [reloadFlag, setReloadFlag] = useState(0);
 
   const fetchUsers = useCallback(async () => {
+    // Only fetch if user is logged in and has proper role
+    if (!user) {
+      setUsers([]);
+      setPagination(null);
+      setLoading(false);
+      setError(null);
+      return;
+    }
+    if (user.role !== "ADMIN" && user.role !== "MODERATOR") {
+      setUsers([]);
+      setPagination(null);
+      setLoading(false);
+      setError("User does not have permission");
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
     try {
-      if (!user) throw new Error('User not logged in');
-      if (user.role !== 'ADMIN' && user.role !== 'MODERATOR') {
-        throw new Error('User does not have permission');
-      }
-
       const firebaseUser = auth.currentUser;
-      if (!firebaseUser) throw new Error('Firebase user not authenticated');
-
+      if (!firebaseUser) {
+        setError("Firebase user not authenticated");
+        setUsers([]);
+        setPagination(null);
+        setLoading(false);
+        return;
+      }
       const token = await firebaseUser.getIdToken();
 
       const res = await fetch(`/api/admin/users?page=${page}&limit=${limit}`, {
@@ -54,14 +70,20 @@ export const useFetchUsers = (page: number = 1, limit: number = 10) => {
 
       if (!res.ok) {
         const errData = await res.json();
-        throw new Error(errData.error || 'Failed to fetch users');
+        throw new Error(errData.error || "Failed to fetch users");
       }
 
       const json: FetchUsersResponse = await res.json();
       setUsers(json.data);
       setPagination(json.pagination);
-    } catch (e: any) {
-      setError(e.message);
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        setError(e.message);
+      } else {
+        setError("An unknown error occurred");
+      }
+      setUsers([]);
+      setPagination(null);
     } finally {
       setLoading(false);
     }
@@ -71,8 +93,7 @@ export const useFetchUsers = (page: number = 1, limit: number = 10) => {
     fetchUsers();
   }, [fetchUsers, reloadFlag]);
 
-  // Expose a manual refresh function
-  const refreshUsers = () => setReloadFlag(prev => prev + 1);
+  const refreshUsers = () => setReloadFlag((prev) => prev + 1);
 
   return { users, pagination, loading, error, refreshUsers };
 };

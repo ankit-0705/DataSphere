@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { auth } from '@/lib/firebase/client';
 import { onAuthStateChanged } from 'firebase/auth';
+import type { User as FirebaseUser} from 'firebase/auth'
 
 type Dataset = {
   id: string;
@@ -50,6 +51,12 @@ type UserContextType = {
   refreshUser: () => Promise<void>; // Added refreshUser method here
 };
 
+type ApiDataset = {
+  id: string;
+  title: string;
+  createdAt: string;
+};
+
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 const UserProvider = ({ children }: { children: React.ReactNode }) => {
@@ -58,7 +65,7 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   // Helper function to fetch user data
-  const fetchUserData = async (firebaseUser: any) => {
+  const fetchUserData = async (firebaseUser: FirebaseUser) => {
     try {
       const token = await firebaseUser.getIdToken();
 
@@ -83,7 +90,7 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
         role: data.data.role,
         createdAt: data.data.createdAt,
         contributions: data.data.contributions,
-        datasets: data.data.datasets.map((d: any) => ({
+        datasets: data.data.datasets.map((d: ApiDataset) => ({
           id: d.id,
           title: d.title,
           createdAt: d.createdAt,

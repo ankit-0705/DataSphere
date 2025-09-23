@@ -1,8 +1,21 @@
-"use client";
+'use client';
 
 import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+
+type PixelDataPoint = {
+  x: number;
+  y: number;
+  color: [number, number, number, number];
+};
+
+type AnimatedPixel = {
+  x: number;
+  y: number;
+  r: number;
+  color: string; // rgba string
+};
 
 export function PlaceholdersAndVanishInput({
   placeholders,
@@ -23,7 +36,7 @@ export function PlaceholdersAndVanishInput({
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const newDataRef = useRef<any[]>([]);
+  const newDataRef = useRef<AnimatedPixel[]>([]);
 
   const startAnimation = () => {
     intervalRef.current = setInterval(() => {
@@ -68,7 +81,7 @@ export function PlaceholdersAndVanishInput({
 
     const imageData = ctx.getImageData(0, 0, 800, 800);
     const pixelData = imageData.data;
-    const newData: any[] = [];
+    const newData: PixelDataPoint[] = [];
 
     for (let t = 0; t < 800; t++) {
       let i = 4 * t * 800;
@@ -97,7 +110,7 @@ export function PlaceholdersAndVanishInput({
       x,
       y,
       r: 1,
-      color: `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${color[3]})`,
+      color: `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${color[3] / 255})`,
     }));
   }, [value]);
 
@@ -108,13 +121,13 @@ export function PlaceholdersAndVanishInput({
   const animate = (start: number) => {
     const animateFrame = (pos: number = 0) => {
       requestAnimationFrame(() => {
-        const newArr = [];
+        const newArr: AnimatedPixel[] = [];
         for (let i = 0; i < newDataRef.current.length; i++) {
           const current = newDataRef.current[i];
           if (current.x < pos) {
             newArr.push(current);
           } else {
-            if (current.r <= 0) {
+            if (typeof current.r === 'undefined' || current.r <= 0) {
               current.r = 0;
               continue;
             }
@@ -206,7 +219,6 @@ export function PlaceholdersAndVanishInput({
           animating && "text-transparent dark:text-transparent"
         )}
       />
-
       {/* Placeholder text animation */}
       <div className="absolute inset-0 flex items-center rounded-full pointer-events-none">
         <AnimatePresence mode="wait">

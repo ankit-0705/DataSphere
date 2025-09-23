@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { StarrySkyBackground } from '@/components/StarrySkyBackground';
-import FloatingDock from '@/components/ui/floating-dock';
+import React, { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { StarrySkyBackground } from "@/components/StarrySkyBackground";
+import FloatingDock from "@/components/ui/floating-dock";
 import {
   IconLayoutDashboard,
   IconDatabase,
@@ -14,10 +14,10 @@ import {
   IconMail,
   IconFilter,
   IconCheck,
-} from '@tabler/icons-react';
-import { useDatasets, Dataset } from '@/hooks/useDatasets';
-import { PlaceholdersAndVanishInput } from '@/components/ui/placeholder-vanish';
-import { useUser } from '@/context/UserContext';
+} from "@tabler/icons-react";
+import { useDatasets, Dataset } from "@/hooks/useDatasets";
+import { PlaceholdersAndVanishInput } from "@/components/ui/placeholder-vanish";
+import { useUser } from "@/context/UserContext";
 
 const ITEMS_PER_PAGE = 9;
 
@@ -76,7 +76,7 @@ const DatasetsSkeleton = () => (
 
 const DatasetPage = () => {
   const { user, loading: userLoading } = useUser();
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [showFilter, setShowFilter] = useState(false);
 
@@ -87,12 +87,7 @@ const DatasetPage = () => {
     orderByDate: false,
   });
 
-  const {
-    datasets,
-    meta,
-    isLoading,
-    isError,
-  } = useDatasets({
+  const { datasets, meta, isLoading, isError } = useDatasets({
     search,
     page,
     limit: ITEMS_PER_PAGE,
@@ -105,20 +100,20 @@ const DatasetPage = () => {
   const totalPages = meta ? Math.ceil(meta.total / ITEMS_PER_PAGE) : 1;
 
   const links = [
-    { title: 'Dashboard', icon: <IconLayoutDashboard />, href: '/dashboard' },
-    { title: 'Datasets', icon: <IconDatabase />, href: '/datasets' },
-    { title: 'Profile', icon: <IconUserCircle />, href: '/profile' },
-    { title: 'Leaderboard', icon: <IconTrophy />, href: '/leaderboard' },
-    { title: 'About Us', icon: <IconInfoCircle />, href: '/about' },
-    { title: 'Contact', icon: <IconMail />, href: '/contact' },
+    { title: "Dashboard", icon: <IconLayoutDashboard />, href: "/dashboard" },
+    { title: "Datasets", icon: <IconDatabase />, href: "/datasets" },
+    { title: "Profile", icon: <IconUserCircle />, href: "/profile" },
+    { title: "Leaderboard", icon: <IconTrophy />, href: "/leaderboard" },
+    { title: "About Us", icon: <IconInfoCircle />, href: "/about" },
+    { title: "Contact", icon: <IconMail />, href: "/contact" },
   ];
 
   const placeholders = [
     "What's the first rule of Fight Club?",
-    'Who is Tyler Durden?',
-    'Where is Andrew Laeddis Hiding?',
-    'Write a Javascript method to reverse a string',
-    'How to assemble your own PC?',
+    "Who is Tyler Durden?",
+    "Where is Andrew Laeddis Hiding?",
+    "Write a Javascript method to reverse a string",
+    "How to assemble your own PC?",
   ];
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -202,7 +197,9 @@ const DatasetPage = () => {
             <button
               aria-label="Filter datasets"
               className={`p-2 rounded transition cursor-pointer ${
-                activeFilters ? 'bg-blue-500 hover:bg-blue-600' : 'bg-white/10 hover:bg-white/20'
+                activeFilters
+                  ? "bg-blue-500 hover:bg-blue-600"
+                  : "bg-white/10 hover:bg-white/20"
               }`}
               onClick={() => setShowFilter(!showFilter)}
             >
@@ -212,13 +209,15 @@ const DatasetPage = () => {
             {/* Filter Dropdown */}
             {showFilter && (
               <div className="absolute top-[110%] right-0 z-30 bg-white/5 backdrop-blur-xl border border-white/20 rounded-md p-4 shadow-lg w-64">
-                <div className="text-sm font-semibold mb-2 text-white/80">Filter & Sort</div>
+                <div className="text-sm font-semibold mb-2 text-white/80">
+                  Filter & Sort
+                </div>
 
                 {[
-                  { label: 'Sort by Likes', key: 'orderByLikes' },
-                  { label: 'Sort by Comments', key: 'orderByComments' },
-                  { label: 'Verified Only', key: 'verifiedOnly' },
-                  { label: 'Sort by Newest', key: 'orderByDate' },
+                  { label: "Sort by Likes", key: "orderByLikes" },
+                  { label: "Sort by Comments", key: "orderByComments" },
+                  { label: "Verified Only", key: "verifiedOnly" },
+                  { label: "Sort by Newest", key: "orderByDate" },
                 ].map(({ label, key }) => (
                   <label
                     key={key}
@@ -269,14 +268,16 @@ const DatasetPage = () => {
 
         {/* Dataset Grid */}
         <div className="col-span-12 flex flex-col gap-6 pb-24">
-          {isError && <div className="text-red-400">Error loading datasets.</div>}
-          {!isLoading && datasets.length === 0 && (
+          {isError && (
+            <div className="text-red-400">Error loading datasets.</div>
+          )}
+          {!isLoading && (datasets ?? []).length === 0 && (
             <div className="text-gray-400">No datasets found.</div>
           )}
-          {!isLoading && datasets.length > 0 && (
+          {!isLoading && (datasets ?? []).length > 0 && (
             <>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {datasets.map((dataset: Dataset) => (
+                {(datasets ?? []).map((dataset: Dataset) => (
                   <div
                     key={dataset.id}
                     className="bg-white/5 border cursor-pointer border-white/10 p-4 rounded-xl shadow-md hover:shadow-white/20 transition flex flex-col justify-between"
@@ -284,44 +285,57 @@ const DatasetPage = () => {
                     <div className="flex items-center justify-between mb-2">
                       <h3 className="text-lg font-semibold">{dataset.title}</h3>
                       <div className="flex items-center gap-3 text-sm text-gray-400">
-                        <div className="flex items-center gap-1">❤️ {dataset._count?.likes || 0}</div>
-                        <div className="flex items-center gap-1">💬 {dataset._count?.comments || 0}</div>
+                        <div className="flex items-center gap-1">
+                          ❤️ {dataset._count?.likes || 0}
+                        </div>
+                        <div className="flex items-center gap-1">
+                          💬 {dataset._count?.comments || 0}
+                        </div>
                         <div
                           className={`flex items-center gap-1 ${
-                            dataset.isVerified ? 'text-white' : 'text-white/10'
+                            dataset.isVerified ? "text-white" : "text-white/10"
                           }`}
                         >
                           <IconCheck className="w-4 h-4" />
-                          <span>{dataset.isVerified ? 'Verified' : 'Not Verified'}</span>
+                          <span>
+                            {dataset.isVerified ? "Verified" : "Not Verified"}
+                          </span>
                         </div>
                       </div>
                     </div>
 
                     <p className="line-clamp-3 mb-2 text-sm text-gray-400">
-                      {dataset.description || 'No description available.'}
+                      {dataset.description || "No description available."}
                     </p>
 
                     <div className="flex justify-between items-end mb-2 text-sm text-gray-300">
                       <div className="flex gap-2 flex-wrap">
                         {dataset.tags?.length > 0 ? (
-                          dataset.tags.map(({ tag }: { tag: { id: string; name: string } }, index: number) => (
-                            <span
-                              key={index}
-                              className="bg-white/10 backdrop-blur-md px-2 py-0.5 rounded"
-                            >
-                              {tag.name}
-                            </span>
-                          ))
+                          dataset.tags.map(
+                            (
+                              { tag }: { tag: { id: string; name: string } },
+                              index: number
+                            ) => (
+                              <span
+                                key={index}
+                                className="bg-white/10 backdrop-blur-md px-2 py-0.5 rounded"
+                              >
+                                {tag.name}
+                              </span>
+                            )
+                          )
                         ) : (
                           <span>No tags</span>
                         )}
                       </div>
-                      <span>{new Date(dataset.createdAt).toLocaleDateString()}</span>
+                      <span>
+                        {new Date(dataset.createdAt).toLocaleDateString()}
+                      </span>
                     </div>
 
                     <div className="flex justify-between">
                       <div className="text-sm italic text-white">
-                        Contributor: {dataset.contributor?.name || 'Unknown'}
+                        Contributor: {dataset.contributor?.name || "Unknown"}
                       </div>
                       <Link href={`/datasets/${dataset.id}`}>
                         <button className="text-sm cursor-pointer px-2 py-1 bg-white/10 rounded hover:bg-white/20 transition">
@@ -339,7 +353,7 @@ const DatasetPage = () => {
                   onClick={handlePrevPage}
                   disabled={page === 1}
                   className={`px-4 py-2 cursor-pointer rounded bg-white/10 hover:bg-white/20 transition ${
-                    page === 1 ? 'opacity-50 cursor-not-allowed' : ''
+                    page === 1 ? "opacity-50 cursor-not-allowed" : ""
                   }`}
                 >
                   Previous
@@ -353,7 +367,7 @@ const DatasetPage = () => {
                   onClick={handleNextPage}
                   disabled={page >= totalPages}
                   className={`px-4 py-2 cursor-pointer rounded bg-white/10 hover:bg-white/20 transition ${
-                    page >= totalPages ? 'opacity-50 cursor-not-allowed' : ''
+                    page >= totalPages ? "opacity-50 cursor-not-allowed" : ""
                   }`}
                 >
                   Next

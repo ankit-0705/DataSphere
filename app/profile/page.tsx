@@ -62,6 +62,7 @@ type ConfirmDeleteAccountModalProps = {
   onCancel: () => void;
   loading: boolean;
 };
+
 const ConfirmDeleteAccountModal: React.FC<ConfirmDeleteAccountModalProps> = ({
   open,
   onConfirm,
@@ -123,6 +124,13 @@ type UploadData = {
   category: string;
   size?: number;
   tags: string;
+};
+
+type Dataset = {
+  id: string;
+  title: string;
+  createdAt: string;
+  // Add more fields if applicable
 };
 
 const SkeletonProfile = () => (
@@ -220,7 +228,6 @@ const ProfilePage = () => {
     error: deleteAccountError,
   } = useDeleteAccount();
 
-  // Modal state to confirm account deletion
   const [confirmDeleteAccountOpen, setConfirmDeleteAccountOpen] = useState(false);
 
   if (loading)
@@ -235,10 +242,10 @@ const ProfilePage = () => {
     const uniqueDatasetIds = Array.from(new Set(refs.map((ref) => ref.datasetId)));
     return uniqueDatasetIds
       .map((id) => user.datasets.find((d) => d.id === id))
-      .filter((d): d is typeof user.datasets[0] => !!d);
+      .filter((d): d is Dataset => !!d);
   };
 
-  const renderDatasetList = (datasets: any[], limit: number = 5) => (
+  const renderDatasetList = (datasets: Dataset[], limit: number = 5) => (
     <ul className="space-y-3">
       {datasets.slice(0, limit).map((dataset) => (
         <li
@@ -258,18 +265,7 @@ const ProfilePage = () => {
   const commentedDatasets = getDatasetsFromRefs(user.comments);
 
   const monthLabels = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
+    "Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec",
   ];
   const currentYear = new Date().getFullYear();
   const monthlyActivityData = monthLabels.map((month, index) => {
@@ -906,7 +902,6 @@ const ProfilePage = () => {
             {roleError && (
               <div className="text-red-500 mb-2 break-words">{roleError}</div>
             )}
-            {/* Show skeleton if usersLoading but filteredUsers length is zero */}
             {usersLoading && filteredUsers.length === 0 && <SkeletonUsersTable />}
           </div>
         </div>

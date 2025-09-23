@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import useSWR from 'swr';
-import { auth } from '@/lib/firebase/client';
+import useSWR from "swr";
+import { auth } from "@/lib/firebase/client";
 
 // Define dataset and tag types
 export type Tag = {
@@ -66,25 +66,29 @@ type UseDatasetsParams = string | DatasetQueryParams | undefined;
 const buildQueryString = (params: DatasetQueryParams): string => {
   const query = new URLSearchParams();
 
-  if (params.search) query.append('search', params.search);
-  if (params.category) query.append('category', params.category);
-  if (params.tag) query.append('tag', params.tag);
-  if (params.minSize !== undefined) query.append('minSize', params.minSize.toString());
-  if (params.maxSize !== undefined) query.append('maxSize', params.maxSize.toString());
-  if (params.orderByLikes) query.append('orderByLikes', 'true');
-  if (params.orderByComments) query.append('orderByComments', 'true');
-  if (params.verified) query.append('verified', 'true');
-  if (params.orderByDate) query.append('orderByDate', 'true');
-  if (params.page) query.append('page', params.page.toString());
-  if (params.limit) query.append('limit', params.limit.toString());
+  if (params.search) query.append("search", params.search);
+  if (params.category) query.append("category", params.category);
+  if (params.tag) query.append("tag", params.tag);
+  if (params.minSize !== undefined)
+    query.append("minSize", params.minSize.toString());
+  if (params.maxSize !== undefined)
+    query.append("maxSize", params.maxSize.toString());
+  if (params.orderByLikes) query.append("orderByLikes", "true");
+  if (params.orderByComments) query.append("orderByComments", "true");
+  if (params.verified) query.append("verified", "true");
+  if (params.orderByDate) query.append("orderByDate", "true");
+  if (params.page) query.append("page", params.page.toString());
+  if (params.limit) query.append("limit", params.limit.toString());
 
   return query.toString();
 };
 
 // SWR fetcher (updated to handle both single and multiple datasets)
-const fetcherWithAuth = async (url: string): Promise<any> => {
+const fetcherWithAuth = async (
+  url: string
+): Promise<Dataset | DatasetResponse> => {
   const user = auth.currentUser;
-  if (!user) throw new Error('No authenticated user');
+  if (!user) throw new Error("No authenticated user");
   const token = await user.getIdToken();
 
   const res = await fetch(url, {
@@ -95,7 +99,7 @@ const fetcherWithAuth = async (url: string): Promise<any> => {
 
   if (!res.ok) {
     const errorData = await res.json();
-    throw new Error(errorData.error || 'Failed to fetch datasets');
+    throw new Error(errorData.error || "Failed to fetch datasets");
   }
 
   return res.json();
@@ -106,10 +110,10 @@ export const useDatasets = (params?: UseDatasetsParams) => {
   // Determine endpoint based on param type
   let endpoint: string | null = null;
 
-  if (typeof params === 'string') {
+  if (typeof params === "string") {
     // params is an ID string -> single dataset endpoint
     endpoint = auth.currentUser ? `/api/datasets/${params}` : null;
-  } else if (typeof params === 'object' && params !== undefined) {
+  } else if (typeof params === "object" && params !== undefined) {
     // params is query params object
     const queryString = buildQueryString(params);
     endpoint = auth.currentUser ? `/api/datasets?${queryString}` : null;
@@ -121,7 +125,7 @@ export const useDatasets = (params?: UseDatasetsParams) => {
   const { data, error, isLoading, mutate } = useSWR(endpoint, fetcherWithAuth);
 
   // If fetching single dataset (by id)
-  if (typeof params === 'string') {
+  if (typeof params === "string") {
     return {
       dataset: data || null,
       isLoading,
@@ -131,11 +135,22 @@ export const useDatasets = (params?: UseDatasetsParams) => {
   }
 
   // Otherwise, fetching list
-  return {
-    datasets: data?.data || [],
-    meta: data?.meta,
-    isLoading,
-    isError: error,
-    refresh: mutate,
-  };
+  if (data && "data" in data && "meta" in data) {
+    return {
+      datasets: data.data || [],
+      meta: data.meta,
+      isLoading,
+      isError: error,
+      refresh: mutate,
+    };
+  } else {
+    // fallback for when data is a single Dataset or undefined
+    return {
+      datasets: [],
+      meta: undefined,
+      isLoading,
+      isError: error,
+      refresh: mutate,
+    };
+  }
 };
