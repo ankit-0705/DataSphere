@@ -2,11 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { verifyRole } from '@/lib/middleware';
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const authResult = await verifyRole(req, ['ADMIN']);
   if (authResult instanceof NextResponse) return authResult;
 
-  const userId = params.id;
+  const { id: userId } = await params;
 
   if (!userId || typeof userId !== 'string') {
     return NextResponse.json({ error: 'Invalid user ID' }, { status: 400 });
