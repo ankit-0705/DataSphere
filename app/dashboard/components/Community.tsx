@@ -23,7 +23,7 @@ const CommunityPulse = () => {
     isError: errorContributors,
   } = useLeaderboard(!!auth.currentUser);
 
-  // Extract unique tags from most liked datasets
+  // Extract unique tags from most liked datasets with safe check
   const uniqueTags = React.useMemo(() => {
     if (!mostLikedDatasets) return [];
     const tagsSet = new Set<string>();
@@ -52,9 +52,7 @@ const CommunityPulse = () => {
 
       {/* Tags from most liked datasets */}
       <div className="mb-6">
-        <h4 className="mb-2 text-sm font-semibold text-neutral-400">
-          Tags from most liked datasets
-        </h4>
+        <h4 className="mb-2 text-sm font-semibold text-neutral-400">Tags from most liked datasets</h4>
         <div className="flex flex-wrap gap-2">
           {uniqueTags.length === 0 ? (
             <span className="text-white text-sm">No tags available</span>
@@ -75,7 +73,7 @@ const CommunityPulse = () => {
       <div className="mb-6">
         <h4 className="mb-2 text-sm font-semibold text-neutral-400">Most liked datasets</h4>
         <ul>
-          {mostLikedDatasets.map((dataset: Dataset) => (
+          {(mostLikedDatasets ?? []).map((dataset: Dataset) => (
             <li
               key={dataset.id}
               className="flex justify-between text-sm text-white py-1 border-b border-neutral-700 last:border-none truncate"
@@ -92,7 +90,7 @@ const CommunityPulse = () => {
       <div className="mb-6">
         <h4 className="mb-2 text-sm font-semibold text-neutral-400">Top Contributors</h4>
         <ul>
-          {topUsers.slice(0, 3).map((contributor: LeaderboardUser) => (
+          {(topUsers ?? []).slice(0, 3).map((contributor: LeaderboardUser) => (
             <li
               key={contributor.id}
               className="flex justify-between py-2 border-b border-neutral-700 last:border-none text-sm text-white truncate"
@@ -108,7 +106,7 @@ const CommunityPulse = () => {
       <button
         onClick={() => router.push('/leaderboard')}
         className="mt-auto rounded-md px-4 py-2 font-medium cursor-pointer border border-white/30 text-white text-sm w-full sm:w-auto text-center 
-                   hover:bg-white/20 hover:shadow-[0_0_10px_rgba(255,255,255,0.3)] transition"
+                 hover:bg-white/20 hover:shadow-[0_0_10px_rgba(255,255,255,0.3)] transition"
       >
         View More...
       </button>
