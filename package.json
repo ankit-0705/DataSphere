@@ -2,12 +2,13 @@
   "name": "nextjs",
   "version": "0.1.0",
   "private": true,
-  "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
-    "start": "next start",
-    "lint": "eslint"
-  },
+"scripts": {
+  "dev": "next dev --turbopack",
+  "build": "prisma generate && next build --turbopack",
+  "start": "next start",
+  "lint": "eslint"
+},
+
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
     "@prisma/client": "^6.15.0",
