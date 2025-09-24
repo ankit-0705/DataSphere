@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+DataSphere
+DataSphere is a community-driven platform where developers and students can discover, share, and request datasets for coding, data science, and machine learning projects.
 
-## Getting Started
+Finding relevant datasets is a common struggle for students and indie developers, often leading to abandoned projects. DataSphere aims to solve this by building a collaborative environment where data becomes more approachable and accessible.
 
-First, run the development server:
+It’s not about competing with Kaggle or Hugging Face—it’s about creating a student-first, project-focused hub for datasets.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+🚀 Features
+Dataset Sharing: Submit datasets or links (Google Drive, GitHub, etc.) with tags and categories.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Search & Filter: Find datasets by type, size, field, or contributor.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Community Features: Likes, comments, and project showcases.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Verified Datasets: Trusted dataset tags to enhance credibility.
 
-## Learn More
+Gamification: Badges, leaderboards, and trending tags to foster community engagement.
 
-To learn more about Next.js, take a look at the following resources:
+Dataset Requests: Ask the community for specific datasets.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Role Management: Admin, Moderator, and User roles with different privileges.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+API Access: For developers who want to integrate dataset search and access into their projects.
 
-## Deploy on Vercel
+🛠 Tech Stack
+Frontend & Backend: Next.js (Fullstack App Router) + TypeScript
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Database: PostgreSQL
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Authentication: Firebase Authentication
+
+Styling: Tailwind CSS + DaisyUI + Aceternity UI + Material UI
+
+Design Tools: Dora AI (UI design), Ideogram (logo generation)
+
+📌 Roadmap
+ Verified dataset tags
+
+ Gamification system
+
+ Role-based access control
+
+ Advanced dataset analytics (downloads, usage stats)
+
+ Mobile-first PWA support
+
+ Integration with GitHub/GitLab for dataset hosting
+
+🤝 Contributing
+Contributions are welcome!
+
+Fork the repository
+
+Create a feature branch (git checkout -b feature-name)
+
+Commit your changes (git commit -m 'Add some feature')
+
+Push to the branch (git push origin feature-name)
+
+Open a Pull Request
+
+📜 License
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+🌟 Acknowledgements
+Next.js – React framework for building web applications
+
+Tailwind CSS – Utility-first CSS framework
+
+DaisyUI – Component library for Tailwind CSS
+
+Firebase – Authentication and hosting
