@@ -7,11 +7,11 @@ import { isOwnerOrHasRole } from '@/lib/middleware';
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { datasetId: string; commentId: string } }
+  { params }: { params: Promise<{ id: string; commentId: string }> }
 ) {
+  const { id: datasetId, commentId } = await params;  // Await params and rename
   try {
     const user = await verifyFirebaseToken(req);
-    const { commentId } = params;
 
     const comment = await prisma.comment.findUnique({ where: { id: commentId } });
 
