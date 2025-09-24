@@ -72,7 +72,7 @@ const LandingPage = () => {
           <p className="mt-6 text-gray-300 text-base sm:text-lg max-w-md mx-auto md:mx-0">
             Finding quality datasets for coding or ML projects can be frustrating.
             DataSphere connects students and developers worldwide, letting you find,
-            share, and explore datasets easily — so great ideas don’t get stuck.
+            share, and explore datasets easily — so great ideas don&#39;t get stuck.
           </p>
         </motion.div>
 
@@ -93,13 +93,13 @@ const LandingPage = () => {
         imgSrc="/mockup.png"
         imgAlt="How It Works Mockup"
       >
-        Ever been stuck on a great idea just because you couldn't find the right
-        dataset? You're not alone.
+        Ever been stuck on a great idea just because you couldn&#39;t find the right
+        dataset? You&#39;re not alone.
         <br />
         DataSphere was born from that frustration — a place where anyone can
         upload and share the datasets they used in their projects.
         <br />
-        Whether it’s a Google Drive link or GitHub repo, it’s all indexed,
+        Whether it&#39;s a Google Drive link or GitHub repo, it&#39;s all indexed,
         tagged, and made searchable.
         <br />
         No more dead ends. Just endless possibilities.
@@ -119,7 +119,7 @@ const LandingPage = () => {
           <li> (Coming Soon) Like, comment, and request specific datasets</li>
           <li> (Future) Showcase projects built using shared datasets</li>
         </ul>
-        <p className="mt-4">Everything you need. Nothing you don’t.</p>
+        <p className="mt-4">Everything you need. Nothing you don&#39;t.</p>
       </Section>
 
       <Section
@@ -130,14 +130,14 @@ const LandingPage = () => {
       >
         What makes DataSphere different from Kaggle or Hugging Face?
         <br />
-        <strong>It’s not about scale. It’s about care.</strong>
+        <strong>It&#39;s not about scale. It&#39;s about care.</strong>
         <br />
-        We’re building a space where developers help each other grow — not just
+        We&#39;re building a space where developers help each other grow — not just
         compete.
         <br />
         Every contribution helps someone out there build their next project.
         <br />
-        You’re not just uploading data — you’re creating opportunities.
+        You&#39;re not just uploading data — you&#39;re creating opportunities.
       </Section>
 
       <Section
@@ -147,7 +147,7 @@ const LandingPage = () => {
         imgAlt="Use Cases Showcase"
         reverse
       >
-        Here’s how developers are already using DataSphere:
+        Here&#39;s how developers are already using DataSphere:
         <br />
         - Disease outbreak prediction using shared medical data
         <br />

@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
   const idToken = authHeader.split("Bearer ")[1];
 
   try {
-    const decodedToken = await adminAuth.verifyIdToken(idToken);
+    await adminAuth.verifyIdToken(idToken);
 
     // Set secure cookie
     const response = NextResponse.json({ success: true });

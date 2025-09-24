@@ -4,17 +4,6 @@ import { FaBell } from 'react-icons/fa';
 import { formatDistanceToNow } from 'date-fns';
 import { useNotifications } from '@/context/NotificationContext';
 
-const NotificationFeedTitle = ({ type }: { type: string }) => {
-  switch (type) {
-    case 'like':
-      return 'New Like';
-    case 'comment':
-      return 'New Comment';
-    default:
-      return type;
-  }
-};
-
 export default function NotificationFeed() {
   const { notifications, unreadCount, loading, markAllAsRead } = useNotifications();
 

@@ -130,7 +130,6 @@ type Dataset = {
   id: string;
   title: string;
   createdAt: string;
-  // Add more fields if applicable
 };
 
 const SkeletonProfile = () => (
@@ -296,8 +295,12 @@ const ProfilePage = () => {
       await updateUserRole(editUserId, editUserRole);
       setEditUserId(null);
       setEditUserRole("");
-    } catch (err: any) {
-      setRoleError(err?.message || "Failed to update role.");
+    } catch (err: unknown) {
+      if (err && typeof err === "object" && "message" in err) {
+        setRoleError((err as { message: string }).message || "Failed to update role.");
+      } else {
+        setRoleError("Failed to update role.");
+      }
     }
   };
 
@@ -655,7 +658,7 @@ const ProfilePage = () => {
                   aria-required="true"
                 />
                 <span className="block text-xs text-gray-400 mt-1">
-                  Paste a Google Drive or Google Docs link. Other URLs won’t work.
+                  Paste a Google Drive or Google Docs link. Other URLs won&#39;t work.
                 </span>
                 {uploadData.url.length > 0 &&
                   !/^https?:\/\/(drive|docs)\.google\.com/.test(uploadData.url) && (
@@ -714,12 +717,12 @@ const ProfilePage = () => {
                   }
                 />
                 <span className="block text-xs text-gray-400 mt-1">
-                  Comma-separated keywords, e.g. "climate, india, health"
+                  Comma-separated keywords, e.g. &#34;climate, india, health&#34;
                 </span>
                 {uploadData.tags.length > 0 &&
                   !/^(\w+\s*,\s*)*\w+$/.test(uploadData.tags) && (
                     <span className="block text-xs text-red-400 mt-1">
-                      Tags must be separated by commas, e.g. "climate, india, health"
+                      Tags must be separated by commas, e.g. &#34;climate, india, health&#34;
                     </span>
                   )}
               </div>

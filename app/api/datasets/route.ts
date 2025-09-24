@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { verifyFirebaseToken } from '@/lib/auth/server';
+import { Prisma } from '@prisma/client'; // Import generated Prisma types
 
 function isValidURL(url: string): boolean {
   try {
@@ -102,7 +103,6 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: 'Unauthorized or invalid request' }, { status: 401 });
       }
     }
-
     return NextResponse.json({ error: 'Failed to create dataset' }, { status: 500 });
   }
 }
@@ -136,7 +136,7 @@ export async function GET(req: NextRequest) {
     const skip = (page - 1) * limit;
 
     // Build where clause
-    const andConditions: any[] = [];
+    const andConditions: Prisma.DatasetWhereInput[] = [];
 
     if (search) {
       andConditions.push({
@@ -153,10 +153,11 @@ export async function GET(req: NextRequest) {
     if (!isNaN(maxSize)) andConditions.push({ size: { lte: maxSize } });
     if (verifiedOnly) andConditions.push({ isVerified: true });
 
-    const whereClause = andConditions.length > 0 ? { AND: andConditions } : {};
+    const whereClause: Prisma.DatasetWhereInput =
+      andConditions.length > 0 ? { AND: andConditions } : {};
 
     // Dynamic orderBy logic (priority: Likes > Comments > Date)
-    const orderBy: any[] = [];
+    const orderBy: Prisma.DatasetOrderByWithRelationInput[] = [];
 
     if (orderByLikes) {
       orderBy.push({ likes: { _count: 'desc' } });

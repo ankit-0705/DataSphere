@@ -6,7 +6,6 @@ import { motion } from "framer-motion";
 import { StarrySkyBackground } from "@/components/StarrySkyBackground";
 import FloatingDock from "@/components/ui/floating-dock";
 import { AnimatedTestimonials } from "@/components/ui/animated-testimonials";
-import LandingGlobe from "@/components/LandingGlobe";
 
 // Tabler icons
 import {

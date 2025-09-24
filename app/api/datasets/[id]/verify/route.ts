@@ -8,7 +8,6 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   if (authResult instanceof NextResponse) {
     return authResult; // Unauthorized or Forbidden response
   }
-  const { user } = authResult;
 
   const datasetId = params.id;
 

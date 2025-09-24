@@ -1,4 +1,5 @@
 import { motion, Variants } from "framer-motion";
+import Image from "next/image";
 
 const fadeInVariants: Variants = {
   initial: { opacity: 0, y: 30 },
@@ -87,11 +88,14 @@ const Section = ({
         {/* Image / Animation with floating effect */}
         <div className="md:w-1/2 w-full flex justify-center">
           <div className="floating rounded-lg shadow-lg max-w-full">
-            <img
+            <Image
               src={imgSrc}
               alt={imgAlt}
               className="w-full max-w-md sm:max-w-lg md:max-w-full rounded-lg object-contain"
               style={{ maxHeight: "400px" }}
+              width={600}
+              height={400}
+              priority
             />
           </div>
         </div>

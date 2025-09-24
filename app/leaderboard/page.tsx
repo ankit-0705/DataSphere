@@ -17,12 +17,6 @@ import {
 
 const ITEMS_PER_PAGE = 10;
 
-const Skeleton = () => (
-  <div className="animate-pulse bg-gradient-to-r from-gray-700 via-gray-600 to-gray-700 rounded-lg">
-    &nbsp;
-  </div>
-);
-
 const LeaderboardPage = () => {
   const [isAuthReady, setIsAuthReady] = useState(false);
   const [viewMode, setViewMode] = useState<'users' | 'datasets'>('users');

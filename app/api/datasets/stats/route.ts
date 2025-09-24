@@ -12,7 +12,7 @@ function formatMonthlyResults(data: { month: string; count: bigint }[]) {
 
 export async function GET(req: NextRequest) {
   try {
-    const decodedUser = await verifyFirebaseToken(req);
+     await verifyFirebaseToken(req);
 
     // Optional role-based access
     // if (decodedUser.role !== 'ADMIN') {

@@ -209,7 +209,7 @@ const DatasetPage: React.FC = () => {
   const id = params?.id as string;
 
   // Fetch dataset or dataset response
-  const { dataset, isLoading, isError, refresh } = useDatasets(id);
+  const { dataset, isLoading, isError } = useDatasets(id);
 
   // Current user info and role state
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
@@ -250,7 +250,6 @@ const DatasetPage: React.FC = () => {
 
   // Verify hook
   const {
-    isVerified,
     toggleVerify,
     loading: verifyLoading,
   } = useVerifyDataset(id, actualDataset?.isVerified ?? false);
@@ -271,7 +270,6 @@ const DatasetPage: React.FC = () => {
     isError: commentsError,
     addComment,
     deleteComment,
-    refresh: refreshComments,
   } = useComments(id);
 
   // Comment input states

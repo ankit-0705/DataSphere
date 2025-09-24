@@ -2,7 +2,8 @@
 
 import { IconArrowLeft, IconArrowRight } from "@tabler/icons-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
+import Image from "next/image";
 
 type Testimonial = {
   quote: string;
@@ -21,17 +22,10 @@ export const AnimatedTestimonials = ({
   const [active, setActive] = useState(0);
   const [rotations, setRotations] = useState<number[]>([]);
 
-  // Generate random rotations only on client-side
-  useEffect(() => {
-    const values = testimonials.map(
-      () => Math.floor(Math.random() * 21) - 10 // -10 to 10
-    );
-    setRotations(values);
-  }, [testimonials]);
-
-  const handleNext = () => {
+  // Stable handleNext handler for useEffect dependency
+  const handleNext = useCallback(() => {
     setActive((prev) => (prev + 1) % testimonials.length);
-  };
+  }, [testimonials.length]);
 
   const handlePrev = () => {
     setActive((prev) => (prev - 1 + testimonials.length) % testimonials.length);
@@ -40,11 +34,19 @@ export const AnimatedTestimonials = ({
   const isActive = (index: number) => index === active;
 
   useEffect(() => {
+    const values = testimonials.map(
+      () => Math.floor(Math.random() * 21) - 10 // -10 to 10
+    );
+    setRotations(values);
+  }, [testimonials]);
+
+  // Updated dependency array to include handleNext
+  useEffect(() => {
     if (autoplay) {
       const interval = setInterval(handleNext, 5000);
       return () => clearInterval(interval);
     }
-  }, [autoplay]);
+  }, [autoplay, handleNext]);
 
   return (
     <div className="mx-auto max-w-sm px-4 py-20 font-sans antialiased md:max-w-4xl md:px-8 lg:px-12">
@@ -84,13 +86,14 @@ export const AnimatedTestimonials = ({
                     }}
                     className="absolute inset-0 origin-bottom"
                   >
-                    <img
+                    <Image
                       src={testimonial.src}
                       alt={testimonial.name}
                       width={500}
                       height={500}
                       draggable={false}
                       className="h-full w-full rounded-3xl object-cover object-center"
+                      priority
                     />
                   </motion.div>
                 ))}
