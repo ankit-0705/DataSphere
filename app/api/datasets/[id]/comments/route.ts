@@ -2,11 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { verifyFirebaseToken } from '@/lib/auth/server';
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id: datasetId } = await params;
   try {
     await verifyFirebaseToken(req); // Require login to view comments
 
-    const datasetId = params.id;
     const url = new URL(req.url);
     const page = Number(url.searchParams.get('page') || '1');
     const limit = Number(url.searchParams.get('limit') || '10');
@@ -29,11 +29,11 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   }
 }
 
-export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id: datasetId } = await params;
   try {
     const decodedUser = await verifyFirebaseToken(req);
     const userId = decodedUser.uid;
-    const datasetId = params.id;
 
     const body = await req.json();
     const { text } = body;
@@ -74,3 +74,4 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     return NextResponse.json({ error: 'Failed to add comment' }, { status: 500 });
   }
 }
+

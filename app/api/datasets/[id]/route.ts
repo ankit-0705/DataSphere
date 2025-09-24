@@ -3,26 +3,26 @@ import { prisma } from '@/lib/prisma';
 import { verifyFirebaseToken } from '@/lib/auth/server';
 import { isOwnerOrHasRole } from '@/lib/middleware';
 
-// GET dataset by ID
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   try {
-      const dataset = await prisma.dataset.findUnique({
-        where: { id: params.id },
-        include: {
-          contributor: true,
-          tags: { include: { tag: true } },
-          comments: {
-            include: { user: true },
-            orderBy: { createdAt: 'desc' },
-          },
-          _count: {
-            select: {
-              likes: true,
-              comments: true,
-            },
+    const dataset = await prisma.dataset.findUnique({
+      where: { id },
+      include: {
+        contributor: true,
+        tags: { include: { tag: true } },
+        comments: {
+          include: { user: true },
+          orderBy: { createdAt: 'desc' },
+        },
+        _count: {
+          select: {
+            likes: true,
+            comments: true,
           },
         },
-      });
+      },
+    });
 
     if (!dataset) {
       return NextResponse.json({ error: 'Dataset not found' }, { status: 404 });
@@ -35,14 +35,10 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   }
 }
 
-// DELETE dataset by ID (owner or mod/admin)
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id: datasetId } = await params;
   try {
     const user = await verifyFirebaseToken(req);
-    const datasetId = params.id;
 
     const dataset = await prisma.dataset.findUnique({
       where: { id: datasetId },
@@ -77,12 +73,10 @@ export async function DELETE(
   }
 }
 
-
-// PATCH to update dataset (owner or mod/admin)
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id: datasetId } = await params;
   try {
     const decodedUser = await verifyFirebaseToken(req);
-    const datasetId = params.id;
     const {
       title,
       description,

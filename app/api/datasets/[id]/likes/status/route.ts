@@ -6,12 +6,12 @@ import { verifyFirebaseToken } from '@/lib/auth/server';
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id: datasetId } = await params;
   try {
     const user = await verifyFirebaseToken(req);
     const userId = user.uid;
-    const datasetId = params.id;
 
     const like = await prisma.like.findUnique({
       where: {
@@ -28,3 +28,4 @@ export async function GET(
     return NextResponse.json({ error: 'Failed to check like status' }, { status: 500 });
   }
 }
+

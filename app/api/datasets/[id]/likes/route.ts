@@ -2,11 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { verifyFirebaseToken } from '@/lib/auth/server';
 
-export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id: datasetId } = await params;
   try {
     const decodedUser = await verifyFirebaseToken(req);
     const userId = decodedUser.uid;
-    const datasetId = params.id;
 
     // Check if user already liked this dataset
     const existingLike = await prisma.like.findUnique({
@@ -64,11 +64,11 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id: datasetId } = await params;
   try {
     const decodedUser = await verifyFirebaseToken(req);
     const userId = decodedUser.uid;
-    const datasetId = params.id;
 
     const existingLike = await prisma.like.findUnique({
       where: {
