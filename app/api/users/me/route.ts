@@ -21,7 +21,6 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    // Count how many users have more contributions than this user
     const usersAbove = await prisma.user.count({
       where: {
         contributions: {
@@ -33,7 +32,7 @@ export async function GET(req: NextRequest) {
     const rank = usersAbove + 1;
 
     let tier = '';
-    if (rank <=3) tier = 'Top 3 Contributor';
+    if (rank <= 3) tier = 'Top 3 Contributor';
     else if (rank <= 10) tier = 'Top 10 Contributor';
     else if (rank <= 50) tier = 'Top 50 Contributor';
     else if (rank <= 100) tier = 'Top 100 Contributor';
@@ -52,7 +51,6 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized or invalid token' }, { status: 401 });
   }
 }
-
 
 export async function PATCH(req: NextRequest) {
   try {
@@ -99,10 +97,23 @@ export async function DELETE(req: NextRequest) {
   try {
     const decodedUser = await verifyFirebaseToken(req);
 
+    // Get IDs of datasets created by the user
+    const userDatasets = await prisma.dataset.findMany({
+      where: { createdBy: decodedUser.uid },
+      select: { id: true },
+    });
+    const datasetIds = userDatasets.map(ds => ds.id);
+
     await prisma.$transaction([
       prisma.like.deleteMany({ where: { userId: decodedUser.uid } }),
       prisma.comment.deleteMany({ where: { userId: decodedUser.uid } }),
+      // Delete dataset tags related to these datasets first
+      prisma.datasetTag.deleteMany({ where: { datasetId: { in: datasetIds } } }),
+      // Now delete the datasets
       prisma.dataset.deleteMany({ where: { createdBy: decodedUser.uid } }),
+      // Delete notifications related to the user
+      prisma.notification.deleteMany({ where: { userId: decodedUser.uid } }),
+      // Finally delete the user
       prisma.user.delete({ where: { id: decodedUser.uid } }),
     ]);
 
